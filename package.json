@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "redstone-api": "^0.4.12"
+  }
+}
