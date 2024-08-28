@@ -1,9 +1,9 @@
-import redstone from 'redstone-api'
-
 async function getTokenPrices(tokenTag) {
     try {
-        const price = await redstone.getPrice(tokenTag);
-        return price.value;
+        const url = `https://api.redstone.finance/prices?symbol=${tokenTag}&provider=redstone&limit=1`
+        const response = await fetch(url);
+        const data = await response.json();
+        return data[0].value;  
     } catch (error) {
         console.error('ERROR 1:', error);
     }
@@ -29,17 +29,23 @@ async function updatePrices(timestamp, interval, prices, tokenTag) {
     }
 }
 
-async function loadPrices(timestamp, interval, prices, tokenTag) {
-    for(let i = 0; i < 60; i++){
-        const price = await redstone.getHistoricalPrice(tokenTag, {
-            date: timestamp , // Any convertable to date type
-        });
-        prices.push({ price: price.value, timestamp: timestamp })
+async function loadPrices(quantity, timestamp, interval, prices, tokenTag) {
+    for(let i = 0; i < quantity; i++){
+        const url = `https://api.redstone.finance/prices?symbol=${tokenTag}&provider=redstone&toTimestamp=${timestamp}&limit=1`
+        const response = await fetch(url)
+        const data = await response.json();
+        prices.push({ price: data[0].value, timestamp: timestamp })
         timestamp -= interval
     }
 }
 
 
 getTokenPrices("ETH").then(value => {
+    element = document.getElementById("token-price");
+    element.innerHTML = `${value}`
     console.log(value)
 })
+// let prices = []
+
+
+// loadPrices(10, Date.now(), 60 * 1000, prices, 'ETH').then(() => console.log(prices))
