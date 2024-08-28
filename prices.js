@@ -1,4 +1,4 @@
-const redstone = require('redstone-api')
+import redstone from 'redstone-api'
 
 async function getTokenPrices(tokenTag) {
     try {
