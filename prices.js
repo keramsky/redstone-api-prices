@@ -39,13 +39,21 @@ async function loadPrices(quantity, timestamp, interval, prices, tokenTag) {
     }
 }
 
+async function showPrices() {
 
-getTokenPrices("ETH").then(value => {
-    element = document.getElementById("token-price");
-    element.innerHTML = `${value}`
-    console.log(value)
-})
-// let prices = []
+    btcPrice = await getTokenPrices("BTC");
+    elementBtc = document.getElementById("btc-price");
+    elementBtc.innerHTML = `${btcPrice}`;
+    console.log(btcPrice);
+    
+    ethPrice = await getTokenPrices("ETH");
+    elementEth = document.getElementById("eth-price");
+    elementEth.innerHTML = `${ethPrice}`;
+    console.log(ethPrice);
 
+    elementMultiplied = document.getElementById("multiplied-price");
+    elementMultiplied.innerHTML = `${btcPrice * ethPrice}`;
 
-// loadPrices(10, Date.now(), 60 * 1000, prices, 'ETH').then(() => console.log(prices))
+}
+
+showPrices();
