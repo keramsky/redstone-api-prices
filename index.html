@@ -1,20 +1,29 @@
 <!DOCTYPE html>
-
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>RedStone api prices</title>
-    <link rel="stylesheet" href="styles/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RedStone API Prices</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="prices.js" defer></script>
 </head>
-    <body>
-        <div id="btc-price">
-            not loaded yet
-        </div>
-        <div id="eth-price">
-            not loaded yet
-        </div>
-        <div id="multiplied-price">
-            not loaded yet
-        </div>
-    </body>
-    <script src="prices.js"></script>
+<body>
+    <div id="btc-price">
+        not loaded yet
+    </div>
+    <div id="eth-price">
+        not loaded yet
+    </div>
+    <div id="multiplied-price">
+        not loaded yet
+    </div>
+    <br>
+    <div id="price-list">
+        not loaded yet
+    </div>
+
+    <div style="width: 600px; margin: 0 auto;">
+        <canvas id="myChart"></canvas>
+    </div>
+</body>
 </html>
