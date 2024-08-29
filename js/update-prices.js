@@ -29,6 +29,7 @@ async function updatePrice(timestamp, interval, prices, tokenTag) {
     }
 }
 
+
 export async function getHistoricalPrice(tokenTag, fromTimestamp, toTimestamp, interval) {
     try {
         const url = `https://api.redstone.finance/prices?symbol=${tokenTag}&provider=redstone&fromTimestamp=${fromTimestamp}&toTimestamp=${toTimestamp}&interval=${interval}`;
@@ -52,9 +53,13 @@ async function loadPrices(tokenTag, fromTimestamp, toTimestamp, interval) {
     return priceList;
 }
 
-let prices = [];
+// time in milliseconds
+const HOUR = 60 * 60 * 1000;
+const MINUTE = 60 * 1000;
+const SECOND = 1000;
 
-loadPrices("ETH", Date.now() - 60 * 60 * 1000, Date.now(), 60 * 1000).then(value => {
+ export let prices = []
+
+loadPrices("ETH", Date.now() - 10 * MINUTE, Date.now(), MINUTE).then(value => {
     prices = value;
-    console.log(prices);
 });
