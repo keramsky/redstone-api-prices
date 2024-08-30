@@ -1,3 +1,5 @@
+import { showChart } from './script.js'
+
 async function getTokenPrice(tokenTag) {
     try {
         const url = `https://api.redstone.finance/prices?symbol=${tokenTag}&provider=redstone&limit=1`
@@ -8,24 +10,13 @@ async function getTokenPrice(tokenTag) {
         console.error('ERROR 1:', error);
     }
 }
-async function updatePrice(timestamp, interval, prices, tokenTag) {
-
-    const now = Date.now();
-    const delay = timestamp - now;
-
-    if (delay > 0) {
-        setTimeout(async () => {
-            try {
-                const price = await getTokenPrices(tokenTag);
-                prices.push({ price, timestamp: Date.now() });
-            } catch (error) {
-                console.error("ERROR 3:", error);
-            }
-
-            await updatePrices(timestamp + interval, interval, prices, tokenTag); // Dodano await
-        }, delay);
-    } else {
-        updatePrices(Date.now() + interval, interval, prices, tokenTag);
+async function updatePrices(prices, tokenTag) {
+    try {
+        prices.shift();
+        const price = await getTokenPrice(tokenTag);
+        prices.push({ price: price, time: Date.now() });
+    } catch (error) {
+        console.error("error!", error);
     }
 }
 
@@ -53,13 +44,19 @@ async function loadPrices(tokenTag, fromTimestamp, toTimestamp, interval) {
     return priceList;
 }
 
+async function updateChart(interval){
+    let prices = await loadPrices("ETH", Date.now() - 60 * interval, Date.now(), interval);
+    await showChart(prices);
+    setInterval(async () => {
+        await updatePrices(prices, "ETH");
+        await showChart(prices);
+        console.log("GREAT!")
+    }, interval)
+}
+
 // time in milliseconds
-const HOUR = 60 * 60 * 1000;
-const MINUTE = 60 * 1000;
-const SECOND = 1000;
+export const HOUR = 60 * 60 * 1000;
+export const MINUTE = 60 * 1000;
+export const SECOND = 1000;
 
- export let prices = []
-
-loadPrices("ETH", Date.now() - 10 * MINUTE, Date.now(), MINUTE).then(value => {
-    prices = value;
-});
+updateChart(MINUTE);
