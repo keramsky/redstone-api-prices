@@ -1,4 +1,43 @@
-import { showChart } from './script.js'
+let myChart = null;
+
+export async function showChart(prices) {
+    const ctx = document.getElementById('myChart').getContext('2d');
+
+    const labels = prices.map(p => new Date(p.time).toLocaleTimeString());
+    const data = prices.map(p => p.price);
+
+    if (myChart === null) {
+        myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'ETH',
+                    data: data,
+                    fill: false,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: 'category',
+                    },
+                    y: {
+                        beginAtZero: false
+                    }
+                }
+            }
+        });
+    } else {
+        myChart.data.labels = labels;
+        myChart.data.datasets[0].data = data;
+        myChart.options.animation = false;
+        myChart.update();
+    }
+}
+
 
 async function getTokenPrice(tokenTag) {
     try {
@@ -10,11 +49,11 @@ async function getTokenPrice(tokenTag) {
         console.error('ERROR 1:', error);
     }
 }
-async function updatePrices(prices, tokenTag) {
+async function updatePrices(prices, tokenTag, timestamp) {
     try {
         prices.shift();
         const price = await getTokenPrice(tokenTag);
-        prices.push({ price: price, time: Date.now() });
+        prices.push({ price: price, time: timestamp });
     } catch (error) {
         console.error("error!", error);
     }
@@ -39,19 +78,32 @@ async function loadPrices(tokenTag, fromTimestamp, toTimestamp, interval) {
 
     prices.forEach(element => {
         priceList.push({ price: element.value, time: element.timestamp });
-
     });
     return priceList;
 }
 
 async function updateChart(interval){
-    let prices = await loadPrices("ETH", Date.now() - 60 * interval, Date.now(), interval);
+    let prices = await loadPrices("ETH", Date.now() - 300 * interval, Date.now(), interval);
+
     await showChart(prices);
+    console.log(prices);
+
+    let currentTimestamp = Date.now();
+    let nextTimestamp = prices[prices.length - 1].time + MINUTE;
+    let waitTime = nextTimestamp - currentTimestamp;
+
+    console.log(Date.now())
     setInterval(async () => {
-        await updatePrices(prices, "ETH");
+        console.log(Date.now())
+        console.log(prices);
+        await updatePrices(prices, "ETH", nextTimestamp);
         await showChart(prices);
-        console.log("GREAT!")
-    }, interval)
+        
+        currentTimestamp = Date.now();
+        nextTimestamp = prices[prices.length - 1].time + MINUTE;
+        waitTime = nextTimestamp - currentTimestamp;
+        console.log(waitTime)
+    }, waitTime); 
 }
 
 // time in milliseconds
