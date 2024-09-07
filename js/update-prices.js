@@ -1,7 +1,7 @@
 let myChart = null;
 
-export async function showChart(prices) {
-    const ctx = document.getElementById('myChart').getContext('2d');
+export async function showChart(prices, tokenSymbol) {
+    const ctx = document.getElementById('eth-chart').getContext('2d');
 
     const labels = prices.map(p => new Date(p.time).toLocaleTimeString());
     const data = prices.map(p => p.price);
@@ -12,7 +12,7 @@ export async function showChart(prices) {
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'ETH',
+                    label: tokenSymbol,
                     data: data,
                     fill: false,
                     borderColor: 'rgb(75, 192, 192)',
@@ -20,6 +20,7 @@ export async function showChart(prices) {
                 }]
             },
             options: {
+                animation: false,  // Wyłączenie animacji
                 scales: {
                     x: {
                         type: 'category',
@@ -39,9 +40,9 @@ export async function showChart(prices) {
 }
 
 
-async function getTokenPrice(tokenTag) {
+async function getTokenPrice(tokenSymbol) {
     try {
-        const url = `https://api.redstone.finance/prices?symbol=${tokenTag}&provider=redstone&limit=1`
+        const url = `https://api.redstone.finance/prices?symbol=${tokenSymbol}&provider=redstone&limit=1`
         const response = await fetch(url);
         const data = await response.json();
         return data[0].value;  
@@ -49,10 +50,10 @@ async function getTokenPrice(tokenTag) {
         console.error('ERROR 1:', error);
     }
 }
-async function updatePrices(prices, tokenTag, timestamp) {
+async function updatePrices(prices, tokenSymbol, timestamp) {
     try {
         prices.shift();
-        const price = await getTokenPrice(tokenTag);
+        const price = await getTokenPrice(tokenSymbol);
         prices.push({ price: price, time: timestamp });
     } catch (error) {
         console.error("error!", error);
@@ -60,9 +61,9 @@ async function updatePrices(prices, tokenTag, timestamp) {
 }
 
 
-async function getHistoricalPrice(tokenTag, fromTimestamp, toTimestamp, interval) {
+async function getHistoricalPrice(tokenSymbol, fromTimestamp, toTimestamp, interval) {
     try {
-        const url = `https://api.redstone.finance/prices?symbol=${tokenTag}&provider=redstone&fromTimestamp=${fromTimestamp}&toTimestamp=${toTimestamp}&interval=${interval}`;
+        const url = `https://api.redstone.finance/prices?symbol=${tokenSymbol}&provider=redstone&fromTimestamp=${fromTimestamp}&toTimestamp=${toTimestamp}&interval=${interval}`;
         const response = await fetch(url);
         const data = await response.json();
         return data;
@@ -71,9 +72,9 @@ async function getHistoricalPrice(tokenTag, fromTimestamp, toTimestamp, interval
     }
 }
 
-async function getSingleHistoricalPrice(tokenTag, timestamp){
+async function getSingleHistoricalPrice(tokenSymbol, timestamp){
     try {
-        const url = `https://api.redstone.finance/prices?symbol=${tokenTag}&provider=redstone&toTimestamp=${timestamp}&limit=1`;
+        const url = `https://api.redstone.finance/prices?symbol=${tokenSymbol}&provider=redstone&toTimestamp=${timestamp}&limit=1`;
         const response = await fetch(url);
         const data = await response.json();
         return data[0].value;
@@ -82,8 +83,9 @@ async function getSingleHistoricalPrice(tokenTag, timestamp){
     }
 }
 
-async function loadPrices(tokenTag, fromTimestamp, toTimestamp, interval) {
-    const prices = await getHistoricalPrice(tokenTag, fromTimestamp, toTimestamp, interval);
+async function loadPrices(tokenSymbol, fromTimestamp, toTimestamp, interval) {
+    console.log(interval)
+    const prices = await getHistoricalPrice(tokenSymbol, fromTimestamp, toTimestamp, interval);
     
     let priceList = [];
 
@@ -93,9 +95,9 @@ async function loadPrices(tokenTag, fromTimestamp, toTimestamp, interval) {
     return priceList;
 }
 
-async function updatePricesList(prices, nextTimestamp, interval){
-    await updatePrices(prices, 'ETH', nextTimestamp)
-    await showChart(prices);
+async function updatePricesList(prices, nextTimestamp, interval, tokenSymbol){
+    await updatePrices(prices, tokenSymbol, nextTimestamp)
+    await showChart(prices, tokenSymbol);
     console.log(prices, Date.now());
 
     const currentTimestamp = Date.now();
@@ -103,49 +105,22 @@ async function updatePricesList(prices, nextTimestamp, interval){
     const waitTime = nextUpdateTime - currentTimestamp;
 
     setTimeout(() => {
-        updatePricesList(prices, nextUpdateTime, interval);
+        updatePricesList(prices, nextUpdateTime, interval, tokenSymbol);
     }, Math.max(waitTime, 0));
 
 }
 
-async function updateChart(interval){
-    const price = await getHistoricalPrice("ETH", Date.now());
-    console.log(price);
-
-    let prices = await loadPrices("ETH", Date.now() - 60 * interval, Date.now(), interval);
-    await showChart(prices);
+async function updateChart(interval, tokenSymbol){
+    let prices = await loadPrices(tokenSymbol, Date.now() - 60 * interval, Date.now(), interval);
+    await showChart(prices, tokenSymbol);
 
     const currentTimestamp = Date.now();
     const nextTimestamp = prices[prices.length - 1].time + interval;
     const waitTime = nextTimestamp - currentTimestamp;
 
-    // console.log(waitTime, currentTimestamp);
-
     setTimeout(() => {
-        updatePricesList(prices, nextTimestamp, interval)
+        updatePricesList(prices, nextTimestamp, interval, tokenSymbol)
     }, Math.max(waitTime, 0));
-
-    // updatePricesList(interval, prices);
-
-    // await showChart(prices);
-    // console.log(prices);
-
-    // let currentTimestamp = Date.now();
-    // let nextTimestamp = prices[prices.length - 1].time + MINUTE;
-    // let waitTime = nextTimestamp - currentTimestamp;
-
-    // console.log(Date.now())
-    // setInterval(async () => {
-    //     console.log(Date.now())
-    //     console.log(prices);
-    //     await updatePrices(prices, "ETH", nextTimestamp);
-    //     await showChart(prices);
-        
-    //     currentTimestamp = Date.now();
-    //     nextTimestamp = prices[prices.length - 1].time + MINUTE;
-    //     waitTime = nextTimestamp - currentTimestamp;
-    //     console.log(waitTime)
-    // }, waitTime); 
 }
 
 // time in milliseconds
@@ -153,4 +128,7 @@ export const HOUR = 60 * 60 * 1000;
 export const MINUTE = 60 * 1000;
 export const SECOND = 1000;
 
-updateChart(MINUTE);
+const tokenSymbol = 'ETH';
+const interval = MINUTE;
+
+updateChart(interval, tokenSymbol);
