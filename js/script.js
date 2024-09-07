@@ -1,14 +1,21 @@
-const ethButton = document.querySelector('.eth-button');
-const ethChart = document.getElementById('eth-chart');
+import {
+    updatePricesId1,
+    updatePricesId2
+} from './update-prices.js'
 
-let isOn = false;
+const ethButton = document.querySelector('.eth-button');
+const chart = document.getElementById('chart');
+
+let isOn = true;
 
 ethButton.addEventListener('click', (e) => {
     if(isOn === false) {
-        ethChart.style.visibility = "visible";
+        // chart.style.visibility = "visible";
         isOn = true;
     } else {
-        ethChart.style.visibility = "hidden";
-        isOn = false; 
+        // chart.style.visibility = "hidden";
+        isOn = false;
+        clearTimeout(updatePricesId1);
+        clearTimeout(updatePricesId2);
     }
 });

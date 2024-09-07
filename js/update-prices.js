@@ -1,7 +1,7 @@
-let myChart = null;
+export let myChart = null;
 
 export async function showChart(prices, tokenSymbol) {
-    const ctx = document.getElementById('eth-chart').getContext('2d');
+    const ctx = document.getElementById('chart').getContext('2d');
 
     const labels = prices.map(p => new Date(p.time).toLocaleTimeString());
     const data = prices.map(p => p.price);
@@ -104,7 +104,7 @@ async function updatePricesList(prices, nextTimestamp, interval, tokenSymbol){
     const nextUpdateTime = nextTimestamp + interval;
     const waitTime = nextUpdateTime - currentTimestamp;
 
-    setTimeout(() => {
+    updatePricesId2 = setTimeout(() => {
         updatePricesList(prices, nextUpdateTime, interval, tokenSymbol);
     }, Math.max(waitTime, 0));
 
@@ -118,7 +118,7 @@ async function updateChart(interval, tokenSymbol){
     const nextTimestamp = prices[prices.length - 1].time + interval;
     const waitTime = nextTimestamp - currentTimestamp;
 
-    setTimeout(() => {
+    updatePricesId1 = setTimeout(() => {
         updatePricesList(prices, nextTimestamp, interval, tokenSymbol)
     }, Math.max(waitTime, 0));
 }
@@ -127,6 +127,9 @@ async function updateChart(interval, tokenSymbol){
 export const HOUR = 60 * 60 * 1000;
 export const MINUTE = 60 * 1000;
 export const SECOND = 1000;
+
+export let updatePricesId1;
+export let updatePricesId2;
 
 const tokenSymbol = 'ETH';
 const interval = MINUTE;
