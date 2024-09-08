@@ -127,11 +127,18 @@ export async function updatePricesList(prices, nextTimestamp, interval, tokenSym
 
 export async function updateChart(interval, tokenSymbol){
     let prices = await loadPrices(tokenSymbol, Date.now() - 60 * interval, Date.now(), interval);
-    await showChart(prices, tokenSymbol);
 
     const currentTimestamp = Date.now();
-    const nextTimestamp = prices[prices.length - 1].time + interval;
+    let nextTimestamp;
+    try {
+        nextTimestamp = prices[prices.length - 1].time + interval;
+    } catch (error) {
+        return -1;
+    }
+
     const waitTime = nextTimestamp - currentTimestamp;
+
+    await showChart(prices, tokenSymbol);
 
     updatePricesId1 = setTimeout(() => {
         updatePricesList(prices, nextTimestamp, interval, tokenSymbol)
