@@ -19,13 +19,17 @@ function toggleButtons(state) {
 }
 
 function setupButton(button, tokenSymbol){
-    button.addEventListener('click', (e) => {
+    button.addEventListener('click', async (e) => {
         // if(isOn === false) {
         toggleButtons(true);
         const newChart = document.createElement("canvas");
         newChart.id = 'chart';
         chartContainer.appendChild(newChart);
     
+        await updateChart(60000, tokenSymbol);
+
+        chartContainer.style.visibility = 'visible';
+
         const closeChartButton = document.createElement("button");
         closeChartButton.id = 'close-chart-button';
         closeChartButton.textContent = "Close Chart";
@@ -38,12 +42,13 @@ function setupButton(button, tokenSymbol){
             document.getElementById('chart').remove();
             document.getElementById('close-chart-button').remove();
         
+            chartContainer.style.visibility = 'hidden';
+
             deleteChart();
     
             toggleButtons(false);
         });
     
-        updateChart(60000, tokenSymbol);
     
     });
 }

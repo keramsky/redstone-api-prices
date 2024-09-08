@@ -1,7 +1,20 @@
+body {
+    background-color: rgb(175, 175, 175);
+}
+
 .chart-container {
-    width: 1300px;
+    width: 1000px;
+    height: 400px;
     margin: 0 auto;
     position: relative;
+    background-color: rgb(122, 122, 122);
+    visibility: hidden;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    padding-left: 70px;
+    border-color: rgb(64, 64, 64);
+    border-width: 15px;
+    border-style: solid;
 }
 
 #chart {
@@ -10,27 +23,47 @@
     display: block;
 }
 
+.chart-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 #close-chart-button {
     background-color: gray;
     width: 100px;
     height: 100px;
     position: absolute;
-    top: 0;
-    right: 0;
+    top: -1px;
+    right: -1px;
+    border-color: rgb(64, 64, 64);
+    border-width: 10px;
+    border-style: solid;
 }
 
-.eth-button,
-.btc-button,
-.ar-button {
+.token-buttons {
+    position: fixed;
+    left: 0;
+    top: 100px;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    row-gap: 10px;
+}
+
+.token-button {
     background-color: black;
     color: rgb(64, 64, 64);
     border-color: rgb(64, 64, 64);
-    border-width: 4px;
+    border-width: 7px;
     border-style: solid;
     font-family: Verdana;
-    border-radius: 10px;
     font-size: 40px;
-    padding: 10px 30px;
+    width: 200px;
+    height: 150px;
     cursor: pointer;
 
     transition: opacity 0.2s;

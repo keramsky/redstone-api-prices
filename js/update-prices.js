@@ -19,18 +19,30 @@ export async function showChart(prices, tokenSymbol) {
                     label: tokenSymbol,
                     data: data,
                     fill: false,
-                    borderColor: 'rgb(75, 192, 192)',
+                    borderColor: 'rgb(0, 0, 0)',
                     tension: 0.1
                 }]
             },
             options: {
-                animation: false,  // Wyłączenie animacji
+                animation: false,
                 scales: {
                     x: {
                         type: 'category',
+                        ticks: {
+                            color: 'white' // Zmieniamy kolor etykiet osi X na czerwony
+                        },
+                        grid: {
+                            color: 'white' // Kolor linii siatki na osi Y
+                        }
                     },
                     y: {
-                        beginAtZero: false
+                        beginAtZero: false,
+                        ticks: {
+                            color: 'white' // Zmieniamy kolor etykiet osi Y na niebieski
+                        },
+                        grid: {
+                            color: 'white' // Kolor linii siatki na osi Y
+                        }
                     }
                 }
             }
