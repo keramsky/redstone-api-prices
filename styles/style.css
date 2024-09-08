@@ -173,4 +173,5 @@ body {
     right: 0;
     display: none;
     backdrop-filter: blur(10px);
+    opacity: 0.9;
 }
