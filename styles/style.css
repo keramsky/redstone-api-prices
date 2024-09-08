@@ -173,7 +173,4 @@ body {
     right: 0;
     display: none;
     backdrop-filter: blur(10px);
-    opacity: 0; /* Początkowa przezroczystość */
-    visibility: hidden; /* Początkowa widoczność */
-    transition: opacity 0.3s ease, visibility 0.3s ease; /* Animacja dla opacity i visibility */
 }
