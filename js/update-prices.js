@@ -5,6 +5,8 @@ export function deleteChart(){
 }
 
 export async function showChart(prices, tokenSymbol) {
+    let lineColor = getTokenColor(prices);
+
     const ctx = document.getElementById('chart').getContext('2d');
 
     const labels = prices.map(p => new Date(p.time).toLocaleTimeString());
@@ -19,7 +21,7 @@ export async function showChart(prices, tokenSymbol) {
                     label: tokenSymbol,
                     data: data,
                     fill: false,
-                    borderColor: 'rgb(0, 0, 0)',
+                    borderColor: lineColor,
                     tension: 0.1
                 }]
             },
@@ -29,19 +31,19 @@ export async function showChart(prices, tokenSymbol) {
                     x: {
                         type: 'category',
                         ticks: {
-                            color: 'white' // Zmieniamy kolor etykiet osi X na czerwony
+                            color: 'white'
                         },
                         grid: {
-                            color: 'white' // Kolor linii siatki na osi Y
+                            color: 'white'
                         }
                     },
                     y: {
                         beginAtZero: false,
                         ticks: {
-                            color: 'white' // Zmieniamy kolor etykiet osi Y na niebieski
+                            color: 'white'
                         },
                         grid: {
-                            color: 'white' // Kolor linii siatki na osi Y
+                            color: 'white'
                         }
                     }
                 }
@@ -125,8 +127,17 @@ export async function updatePricesList(prices, nextTimestamp, interval, tokenSym
 
 }
 
+export function getTokenColor(prices){
+    if (prices[0].price <= prices[prices.length - 1].price) {
+        return 'green';
+    } else {
+        return 'red';
+    }
+}
+
 export async function updateChart(interval, tokenSymbol){
-    let prices = await loadPrices(tokenSymbol, Date.now() - 60 * interval, Date.now(), interval);
+    prices = await loadPrices(tokenSymbol, Date.now() - 60 * interval, Date.now(), interval);
+
 
     const currentTimestamp = Date.now();
     let nextTimestamp;
@@ -152,6 +163,8 @@ export const SECOND = 1000;
 
 export let updatePricesId1;
 export let updatePricesId2;
+
+export let prices;
 
 const tokenSymbol = 'ETH';
 const interval = MINUTE;
