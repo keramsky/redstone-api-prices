@@ -65,6 +65,9 @@ async function showChartWindow(tokenSymbol, attempt){
     priceText.style.color = textColor;
     chartContainer.appendChild(priceText);
 
+    const blurOverlay = document.querySelector('.blur-overlay');
+    blurOverlay.style.display = 'block';
+
     const updatePriceText = setInterval(() => {
         priceText.innerHTML = `PRICE: ${prices[prices.length - 1].price.toFixed(2)}`;
     }, 60000);
@@ -77,7 +80,8 @@ async function showChartWindow(tokenSymbol, attempt){
         document.getElementById('close-chart-button').remove();
     
         chartContainer.style.display = 'none';
-        
+        blurOverlay.style.display = 'none';
+
         clearInterval(updatePriceText);
         priceText.remove();
 

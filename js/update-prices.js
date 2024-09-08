@@ -18,11 +18,11 @@ export async function showChart(prices, tokenSymbol) {
             data: {
                 labels: labels,
                 datasets: [{
-                    label: tokenSymbol,
+                    label: `${tokenSymbol} / USD`,
                     data: data,
                     fill: false,
                     borderColor: lineColor,
-                    tension: 0.1
+                    tension: 0.1,
                 }]
             },
             options: {
@@ -44,6 +44,16 @@ export async function showChart(prices, tokenSymbol) {
                         },
                         grid: {
                             color: 'white'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#FFFFFF',
+                            font: {
+                                size: 16
+                            }
                         }
                     }
                 }

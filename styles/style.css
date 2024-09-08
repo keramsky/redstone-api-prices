@@ -1,5 +1,7 @@
 body {
     background-color: rgb(175, 175, 175);
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
 }
 
 .chart-container {
@@ -50,7 +52,6 @@ body {
 
 #price-text {
     font-size: 22px;
-    font-family: Verdana;
     position: absolute;
     top: 200px;
     right: 10px;
@@ -79,7 +80,6 @@ body {
     border-color: rgb(64, 64, 64);
     border-width: 7px;
     border-style: solid;
-    font-family: Verdana;
     font-size: 40px;
     width: 200px;
     height: 150px;
@@ -101,7 +101,6 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    font-family: Verdana;
     background-color: rgb(219, 219, 219);
     padding: 50px 80px 30px 80px;
     row-gap: 10px;
@@ -153,4 +152,28 @@ body {
 
 .github-icon:active {
     opacity: 0.5;
+}
+
+.redstone-api-text {
+    position: absolute;
+    top: 170px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 60px;
+    left: 50%;
+    transform: translate(-50%);
+}
+
+.blur-overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: none;
+    backdrop-filter: blur(10px);
+    opacity: 0; /* Początkowa przezroczystość */
+    visibility: hidden; /* Początkowa widoczność */
+    transition: opacity 0.3s ease, visibility 0.3s ease; /* Animacja dla opacity i visibility */
 }
