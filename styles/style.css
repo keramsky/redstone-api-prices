@@ -1,6 +1,27 @@
+.chart-container {
+    width: 1300px;
+    margin: 0 auto;
+    position: relative;
+}
 
+#chart {
+    padding-right: 5px;
+    padding-top: 5px;
+    display: block;
+}
 
-.eth-button {
+#close-chart-button {
+    background-color: gray;
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.eth-button,
+.btc-button,
+.ar-button {
     background-color: black;
     color: rgb(64, 64, 64);
     border-color: rgb(64, 64, 64);
@@ -15,6 +36,8 @@
     transition: opacity 0.2s;
 }
 
-.eth-button:hover {
+.eth-button:hover,
+.btc-button:hover,
+.ar-button:hover {
     opacity: 0.8;
 }
