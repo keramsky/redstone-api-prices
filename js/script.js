@@ -122,7 +122,7 @@ function updateTextPrices(){
             button.innerHTML = `${classList[2]} <br>`
             button.innerHTML += ` ${price.toFixed(1)}`;
         });
-    }, 1000);
+    }, 60000);
 
 }
 
@@ -130,10 +130,14 @@ const ethButton = document.querySelector('.eth-button');
 const btcButton = document.querySelector('.btc-button');
 const arButton = document.querySelector('.ar-button');
 const solButton = document.querySelector('.sol-button');
+const tonButton = document.querySelector('.ton-button');
+const nearButton = document.querySelector('.near-button');
 
 setupButton(ethButton, 'ETH');
 setupButton(btcButton, 'BTC');
 setupButton(arButton, 'AR');
 setupButton(solButton, 'SOL');
+setupButton(tonButton, 'TON');
+setupButton(nearButton, 'NEAR');
 
 updateTextPrices();
